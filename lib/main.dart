@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mvvm_api/ui/user/views/users_screen.dart';
+import 'package:mvvm_api/routes/app_router.dart';
 
 void main() {
   runApp(const MainApp());
@@ -11,8 +11,9 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(body: UsersScreen()),
+    return MaterialApp.router(
+      //Router
+      routerConfig: AppRouter.router,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
             textTheme:

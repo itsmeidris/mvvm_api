@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mvvm_api/constants/app_routes.dart';
 import 'package:mvvm_api/models/user_model.dart';
+import 'package:mvvm_api/routes/app_router.dart';
+import 'package:mvvm_api/ui/core/shared/mvvm_appbar.dart';
 import 'package:mvvm_api/ui/core/themes/app_colors.dart';
 import 'package:mvvm_api/ui/user/view_model/user_view_model.dart';
 import 'package:mvvm_api/ui/user/widgets/user_profile_card.dart';
@@ -21,54 +25,45 @@ class _UsersScreenState extends State<UsersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.myWhite,
-      appBar: AppBar(
-        title: const Text(
-          'MVVM / JSONPLACEHOLDER',
-          style: TextStyle(color: Colors.white),
+      appBar: MvvmAppbar(),
+      floatingActionButton: ElevatedButton(
+        onPressed: () async {
+          // Wait for the fetch to complete
+          final users = await _userViewModel.fetchUsers();
+          setState(() {
+            _usersFuture =
+                Future.value(users); // Update the Future for FutureBuilder
+            _usersNumber =
+                _userViewModel.numberOfUsers; // Update the number of users
+          });
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blueAccent,
+          elevation: 1,
+          padding: const EdgeInsets.symmetric(
+            vertical: 16,
+            horizontal: 20,
+          ),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+          ),
         ),
-        centerTitle: true,
-        backgroundColor: AppColors.myBlue,
+        child: const Text(
+          'Get users',
+          style: TextStyle(color: Colors.white, fontSize: 16),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            Center(
-              child: ElevatedButton(
-                onPressed: () async {
-                  // Wait for the fetch to complete
-                  final users = await _userViewModel.fetchUsers();
-                  setState(() {
-                    _usersFuture = Future.value(
-                        users); // Update the Future for FutureBuilder
-                    _usersNumber = _userViewModel
-                        .numberOfUsers; // Update the number of users
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blueAccent,
-                  elevation: 1,
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 16,
-                    horizontal: 20,
-                  ),
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                  ),
-                ),
-                child: const Text(
-                  'Fetch users',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    'Users found: ($_usersNumber)',
+                    'Users found : ($_usersNumber)',
                     style: const TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -105,13 +100,14 @@ class _UsersScreenState extends State<UsersScreen> {
                         itemBuilder: (context, index) {
                           final user = users[index];
                           return UserProfileCard(
+                            onCardTap: () => context.pushNamed("user_details"),
                             userModel: user,
                           );
                         },
                       );
                     } else {
                       return const Center(
-                        child: Text('No users found'),
+                        child: Text('No users found yet.' ,style: TextStyle(fontSize: 18),),
                       );
                     }
                   },

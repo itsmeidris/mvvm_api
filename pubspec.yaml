@@ -12,6 +12,7 @@ dependencies:
   dio:
   google_fonts:
   provider:
+  go_router:
 
 dev_dependencies:
   flutter_test:
