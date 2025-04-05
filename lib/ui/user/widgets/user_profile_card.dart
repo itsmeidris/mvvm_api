@@ -62,8 +62,7 @@ class UserProfileCard extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  userModel.phone
-                  ,
+                  userModel.phone,
                   style: TextStyle(
                       fontSize: 15,
                       color: Colors.black45,

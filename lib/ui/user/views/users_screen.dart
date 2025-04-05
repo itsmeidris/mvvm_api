@@ -1,8 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mvvm_api/constants/app_routes.dart';
 import 'package:mvvm_api/models/user_model.dart';
-import 'package:mvvm_api/routes/app_router.dart';
 import 'package:mvvm_api/ui/core/shared/mvvm_appbar.dart';
 import 'package:mvvm_api/ui/core/themes/app_colors.dart';
 import 'package:mvvm_api/ui/user/view_model/user_view_model.dart';
@@ -22,7 +21,18 @@ class _UsersScreenState extends State<UsersScreen> {
   int _usersNumber = 0;
 
   @override
+  void initState() {
+    super.initState();
+    if (kDebugMode) {
+      print('initState method is called');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (kDebugMode) {
+      print('build method is called');
+    }
     return Scaffold(
       backgroundColor: AppColors.myWhite,
       appBar: MvvmAppbar(),
@@ -100,14 +110,23 @@ class _UsersScreenState extends State<UsersScreen> {
                         itemBuilder: (context, index) {
                           final user = users[index];
                           return UserProfileCard(
-                            onCardTap: () => context.pushNamed("user_details"),
+                            onCardTap: () {
+                              context.pushNamed(
+                                "user_details",
+                                pathParameters: {'id': user.id.toString()},
+                                extra: user
+                              );
+                            },
                             userModel: user,
                           );
                         },
                       );
                     } else {
                       return const Center(
-                        child: Text('No users found yet.' ,style: TextStyle(fontSize: 18),),
+                        child: Text(
+                          'No users found yet.',
+                          style: TextStyle(fontSize: 18),
+                        ),
                       );
                     }
                   },

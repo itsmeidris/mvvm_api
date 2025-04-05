@@ -26,7 +26,7 @@ class UserViewModel extends ChangeNotifier {
       return users;
     } catch (e) {
       debugPrint('Error fetching the users');
-      throw Exception('Error fetching the users');
+      throw Exception('Error fetching users');
     }
   }
 }
